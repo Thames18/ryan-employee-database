@@ -3,7 +3,7 @@
  session_start();
 
   /* check if user logged in */
-  
+
    $user_check = $_SESSION['login_user'];
    
    $ses_sql = mysqli_query($dbconnect,"select Username from Users where Username = '$user_check' ");
@@ -14,6 +14,7 @@
    
 
    if(!isset($_SESSION['login_user'])){
+
       header("location:login.php");
    }
 
@@ -34,6 +35,7 @@ if($result != null)
 // display records if there are records to display
 if ($result->num_rows > 0)
 {
+	
 // display records in a table
 echo "<h2>Update Employee</h2>";
 echo "<fieldset>";
