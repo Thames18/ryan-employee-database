@@ -25,7 +25,6 @@ $fname = $_SESSION['fname'];
 $dob = $_SESSION['bday'];
 
 
-
 // Now search the DB to see if a record with this email already exists:
 
 $result = $dbconnect->query(" SELECT * FROM Employee WHERE (lastname = '".$lname."' AND firstname = '".$fname."') AND bdate ='".$dob."'");
@@ -35,7 +34,7 @@ if($result != null)
 // display records if there are records to display
 if ($result->num_rows > 0)
 {
-	
+
 // display records in a table
 echo "<h2>Update Employee</h2>";
 echo "<fieldset>";
@@ -59,12 +58,12 @@ while ($row = $result->fetch_object())
 		  <option value='1'>Active</option>
 		  <option value='0'>Inactive</option>
 		  </select></td></tr>";
-
 }
 
 echo "<tr><td colspan='2'><input type='submit' name='update' value='Update Employee' /></td>";
 echo "</tbody></table>";
 echo '</form>';
+
 }
 // if there are no records in the database, display an alert message
 else
