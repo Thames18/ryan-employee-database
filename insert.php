@@ -32,38 +32,39 @@ if(isset($_POST['submit'])){
   if(empty($lname) && empty($fname) && empty($dob)){
     header("location:entry.php");
   }else{
-
-
      
       $result = mysqli_query($dbconnect,"SELECT * FROM Employee WHERE (lastname = '".$lname."' AND firstname = '".$fname."') AND bdate ='".$dob."'");
-      echo $result->num_rows;
       if ($result->num_rows === 0) {
-        die($dbconnect->error);
+
+        $result2 = "INSERT IGNORE INTO Employee (firstname, midname, lastname, email, phone, hiredate, bdate, emp_status) 
+            VALUES ('".$fname."', '".$mname."', '".$lname."', '".$email."', '".$phone."', '".$hiredate."','".$dob."', '1')";
+        if ($dbconnect->query($result2) === false) {
+            echo "SQL error: ".$dbconnect->error;
+        }else{
+            $empid = "EPID".date('my').$dbconnect->insert_id;
+            $empidresult = "UPDATE Employee SET empid='".$empid."' WHERE id='".$dbconnect->insert_id."'";
+            if ($dbconnect->query($empidresult) === TRUE) {
+              echo " Record added successfully <a href='search.php'>View Employees</a>";
+            } else {
+              echo "Error adding record: " . $dbconnect->error;
+            }
+
+        }
+        
+        echo '<h3><a href = "index.php">Back to Main</a></h3>';
+
       }else{
-
-
         if ($result->num_rows > 0) {
           $_SESSION['fname'] = $fname;
           $_SESSION['lname'] = $lname;
           $_SESSION['bday'] = $dob; 
-           echo "Duplicate Employee <a href='update.php'>Update Employee Record</a>";
+
+          while ($row = $result->fetch_object()){
+           echo "<h3>Duplicate Employee <a href='update.php?id=" . $row->id . "'>Update Employee Record</a></h3>";
+          }
            // do something to alert user about non-unique email
         } else {
-          /*$result2 = "INSERT IGNORE INTO Employee (firstname, midname, lastname, email, phone, hiredate, bdate, emp_status) 
-          	VALUES ('".$fname."', '".$mname."', '".$lname."', '".$email."', '".$phone."', '".$hiredate."','".$dob."', '1')";
 
-          if ($dbconnect->query($result2) === false) {
-          	echo "SQL error:".$dbconnect->error;}
-          else{
-          	$empid = "EPID".date('my').$dbconnect->insert_id;
-          	$empidresult = "UPDATE Employee SET empid='".$empid."' WHERE id='".$dbconnect->insert_id."'";
-
-          	if ($dbconnect->query($empidresult) === TRUE) {
-            echo " Record added successfully <a href='view.php'>View Employees</a>";
-        	} else {
-        	    echo "Error adding record: " . $dbconnect->error;
-        	}
-          }*/
         }
 
       }

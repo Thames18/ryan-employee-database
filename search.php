@@ -19,17 +19,22 @@ session_start();
       header("location:login.php");
    }
    error_reporting(0);
-if(isset($_POST['search']) && isset($_POST['firstname']) && isset($_POST['lastname']))
+
+
+if(isset($_POST['search1']) && isset( $_POST['firstname'] ) && isset( $_POST['lastname'] ) )
 {
-	$fname = $_POST['firstname'];
-    $lname = $_POST['lastname'];
-    
-    $result = mysqli_query($dbconnect,"SELECT * FROM Employee WHERE (lastname = '".$lname."' AND firstname = '".$fname."')");    
 
-}elseif( isset($_POST['search']) && isset($_POST['empid']) ){
+    $fname = $_POST['firstname']; $lname = $_POST['lastname'];
+    if(!empty($fname) || !empty($lname)){  
+      $result = mysqli_query($dbconnect,"SELECT * FROM Employee WHERE (lastname = '".$lname."' AND firstname = '".$fname."')");    
+    }else{
+      $result = mysqli_query($dbconnect,"SELECT * FROM Employee ORDER BY id"); 
+    }
 
+}elseif(isset($_POST['search2']) && isset($_POST['empid']) ){
+ 
     $empid = $_POST['empid'];
-    echo $empid;
+
     $result = mysqli_query($dbconnect,"SELECT * FROM Employee WHERE empid ='".$empid."'"); 
 
 }else{
@@ -44,41 +49,76 @@ if(isset($_POST['search']) && isset($_POST['firstname']) && isset($_POST['lastna
       <title>Search Employee </title>
       <style type="text/css">
       input[type=submit],button{
-      	   padding:5px;
+      	padding:5px;
 		   margin:5px;
 		   cursor: pointer;
 		   font-size: 13px;
 		   text-transform: uppercase;
       }
-      input[type=text]{
+      input[type=text], select{
       		padding:5px;
       		font-size: 13px;
+      }
+      select{
+        width: 200px;
       }
       fieldset{
       	width: 86%;
       	padding:15px 5px;
       	margin-bottom: 15px;
       }
+      #employeeid{display: none;}
       </style>
+      <script type="text/javascript">
+        function changesearchform(searchtype){
+          if (searchtype == 'employeeid'){
+            document.getElementById('employeeid').style.display = 'block';
+            document.getElementById('empname').style.display = 'none';
+          } 
+          else{
+              document.getElementById('employeeid').style.display = 'none';
+              document.getElementById('empname').style.display = 'block';
+          }
+        }
+      </script>
    </head>
 <body>
   <center>
     <h1>Welcome <?php echo "<span style='color:red'>" . $login_session . "</span>"; ?></h1> 
 	  
     <h2>Search Employee</h2>
+
     <fieldset>
 	<form action="" method="post">
-		<table width="100%" border="0" align="center" cellpadding="5" cellspacing="0">
+    
+		<table width="100%" border="0" align="left" cellpadding="5" cellspacing="0" >
 			<tbody>
             <tr>
-              <td><div align="left">First Name:</div></td>
-              <td><input type="text" name="firstname" id="firstname" value=""/></td>
-              <td><div align="left">Last Name:</div></td>
-              <td><input type="text" name="lastname"  value=""/><span style="padding-left:35px">OR</span></td>
-              <td><div align="left">Employee ID:</div></td>
-              <td><input type="text" name="empid"  value=""/></td>
-              <td> <input name="search" type="submit" value="Search Now" /></td>
+              <td>
+                <label>Search By:</label>
+                <select id="changesearch" onchange="changesearchform(this.value);">
+                    <option value="empname">By Name</option>
+                    <option value="employeeid">By ID</option>
+                </select>
+              </td>
+              <td>
+                <table>
+                  <tr id="empname">
+                    <td><div align="left">First Name:</div></td>
+                    <td><input type="text" name="firstname" id="firstname" value=""/></td>
+                    <td><div align="left">Last Name:</div></td>
+                    <td><input type="text" name="lastname"  value=""/></td>
+                    <td> <input name="search1" type="submit" value="Search Now" /></td>
+                  </tr>
+                  <tr id="employeeid">
+                    <td><div align="left">Employee ID:</div></td>
+                    <td><input type="text" name="empid"  value=""/></td>
+                    <td> <input name="search2" type="submit" value="Search Now" /></td>
+                  </tr>
+                  </table>
+              </td>
             </tr>
+            
         </tbody>
           </table>
 
@@ -129,7 +169,7 @@ if($result != null)
     }
 
     echo "</table>";
-    echo "<a><button name='clear'>Clear Results</button></a>";
+
     }
     // if there are no records in the database, display an alert message
     else
