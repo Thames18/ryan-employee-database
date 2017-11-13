@@ -31,15 +31,34 @@ if($_SERVER["REQUEST_METHOD"] == "POST") {
 <html>
 <head>
 <title>Login Page</title>
+<style type="text/css">
+  button{
+      padding:5px;
+       cursor: pointer;
+       font-size: 13px;
+       text-transform: uppercase;
+       width: 230px;
+      }
+  input{
+    margin:5px 0;
+          padding:5px;
+          font-size: 13px;
+          width: 215px;
+  }
+  .container{
+text-align: left;
+margin:auto;
+width: 20%;
+  }
+</style>
 </head>
 <body>
-<center>
+
  <form action="" method="post">
-  <div class="imgcontainer">
-    <h1>Employee Portal</h1>
-  </div>
+
 
   <div class="container">
+    <h1>Employee Portal</h1>
     <label><b>Username</b></label>
     <input type="text" placeholder="Enter Username" name="uname" id="uname" id="psw" required>
 	<br>
@@ -47,15 +66,10 @@ if($_SERVER["REQUEST_METHOD"] == "POST") {
     <input type="password" placeholder="Enter Password" name="psw" required>
 	<br>
     <button type="submit">Login</button>
-    <input type="checkbox" checked="checked"> Remember me
   </div>
 
-  <div class="container" style="background-color:#f1f1f1">
-    <button type="button" class="cancelbtn">Cancel</button>
-    <span class="psw">Forgot <a href="#">password?</a></span>
-  </div>
   
 </form> 
-</center>
+
 </body>
 </html>
